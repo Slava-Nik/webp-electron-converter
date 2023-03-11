@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Button } from 'antd';
-import { File } from '../types';
+import { File } from '../types/general';
 
 const FilesListContainer = styled.div`
   opacity: 0.9;
@@ -14,8 +14,9 @@ const FileList = styled.ul`
 
 const FilesListRow = styled.li`
   display: flex;
+  align-items: center;
   font-size: 16px;
-  padding: 7px 10px 7px 0;
+  padding: 7px 15px 7px 0;
   background-color: rgb(233, 238, 242);
   user-select: none;
 
@@ -28,7 +29,10 @@ const FileRowCount = styled.span`
   padding-right: 10px;
 `;
 const FileRowPath = styled.span`
-  padding-right: 5px;
+  display: block;
+  width: 700px;
+  overflow: hidden;
+  padding-right: 10px;
   &:hover {
     cursor: pointer;
     color: #ad6b62;
@@ -54,6 +58,10 @@ interface FilesListToConvertProps {
 }
 
 const FilesListToConvert = ({ files, removeByPath }: FilesListToConvertProps) => {
+  const handleOpenFile = (path: string) => {
+    window.filesApi.openFileByPath(path);
+  };
+
   return (
     <FilesListContainer>
       {files && (
@@ -61,7 +69,11 @@ const FilesListToConvert = ({ files, removeByPath }: FilesListToConvertProps) =>
           {files.map((file, idx) => (
             <FilesListRow key={file.path}>
               <FileRowCount className="file-count">{`${idx + 1})`}</FileRowCount>
-              <FileRowPath>{`${file.path};`}</FileRowPath>
+              <FileRowPath
+                onClick={() => {
+                  handleOpenFile(file.path);
+                }}
+              >{`${file.path};`}</FileRowPath>
               <FileRowSize> {`${(file.size / 1000).toFixed(2)} KB`}</FileRowSize>
               <StyledButton
                 shape="circle"

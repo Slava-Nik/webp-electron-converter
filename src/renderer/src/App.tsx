@@ -5,7 +5,7 @@ import { Spin } from 'antd';
 import Dropzone from '../src/components/Dropzone';
 import FilesListToConvert from './components/FilesListToConvert';
 import Controls from './components/Controls';
-import { File } from './types';
+import { File } from './types/general';
 
 const AppContainer = styled.div`
   display: flex;

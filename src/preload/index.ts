@@ -1,11 +1,12 @@
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 
-// Custom APIs for renderer
-const api = {};
+const filesApi = {
+  openFileByPath: (path: string) => ipcRenderer.invoke('openFileByPath', { path })
+};
 
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld('api', api);
+    contextBridge.exposeInMainWorld('filesApi', filesApi);
   } catch (error) {
     console.error(error);
   }
