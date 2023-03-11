@@ -19,7 +19,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30px;
+  padding: 40px;
   border-width: 2px;
   border-radius: 2px;
   font-size: 20px;

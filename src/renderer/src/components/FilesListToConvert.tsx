@@ -1,42 +1,83 @@
 import styled from 'styled-components';
+import { Button } from 'antd';
+import { File } from '../types';
 
 const FilesListContainer = styled.div`
-  padding-top: 10px;
-  padding-left: 10px;
   opacity: 0.9;
 `;
 
-const FilesListRow = styled.div`
+const FileList = styled.ul`
+  margin: 0;
+  padding-left: 10px;
+  list-style: none;
+`;
+
+const FilesListRow = styled.li`
+  display: flex;
   font-size: 16px;
-  padding: 5px 0;
-  span {
-    font-size: 15px;
-    font-style: italic;
-    font-weight: bold;
+  padding: 7px 10px 7px 0;
+  background-color: rgb(233, 238, 242);
+  user-select: none;
+
+  &:nth-of-type(2n) {
+    background-color: transparent;
   }
 `;
 
-interface File {
-  name: string;
-  path: string;
-  size: number;
-  type: string;
-}
+const FileRowCount = styled.span`
+  padding-right: 10px;
+`;
+const FileRowPath = styled.span`
+  padding-right: 5px;
+  &:hover {
+    cursor: pointer;
+    color: #ad6b62;
+  }
+  &:active {
+    opacity: 0.9;
+  }
+`;
+const FileRowSize = styled.span`
+  font-size: 15px;
+  font-style: italic;
+  font-weight: bold;
+`;
+
+const StyledButton = styled(Button)`
+  margin-left: auto;
+  color: blue;
+`;
 
 interface FilesListToConvertProps {
   files?: File[];
+  removeByPath: (path: string) => void;
 }
 
-const FilesListToConvert = ({ files }: FilesListToConvertProps) => {
+const FilesListToConvert = ({ files, removeByPath }: FilesListToConvertProps) => {
   return (
     <FilesListContainer>
-      {files &&
-        files.map((file, idx) => (
-          <FilesListRow key={idx}>
-            {`${idx + 1}. ${file.path};`}
-            <span> {`${Math.floor(file.size / 1000)} KB`}</span>
-          </FilesListRow>
-        ))}
+      {files && (
+        <FileList>
+          {files.map((file, idx) => (
+            <FilesListRow key={file.path}>
+              <FileRowCount className="file-count">{`${idx + 1})`}</FileRowCount>
+              <FileRowPath>{`${file.path};`}</FileRowPath>
+              <FileRowSize> {`${(file.size / 1000).toFixed(2)} KB`}</FileRowSize>
+              <StyledButton
+                shape="circle"
+                size="small"
+                type="dashed"
+                danger
+                onClick={() => {
+                  removeByPath(file.path);
+                }}
+              >
+                X
+              </StyledButton>
+            </FilesListRow>
+          ))}
+        </FileList>
+      )}
     </FilesListContainer>
   );
 };

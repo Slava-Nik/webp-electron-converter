@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import uniqBy from 'lodash.uniqby';
 import Dropzone from '../src/components/Dropzone';
 import FilesListToConvert from './components/FilesListToConvert';
+import Controls from './components/Controls';
+import { File } from './types';
 
 const AppContainer = styled.div`
   display: flex;
@@ -21,7 +24,7 @@ const ContentWrapper = styled.div`
 const ConverterTitle = styled.h1`
   text-align: center;
   margin: 0;
-  padding-top: 50px;
+  padding-top: 20px;
   padding-bottom: 20px;
   color: #333;
   text-transform: uppercase;
@@ -29,12 +32,15 @@ const ConverterTitle = styled.h1`
 `;
 
 function App(): JSX.Element {
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<File[]>([]);
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       console.log(acceptedFiles);
-      setFiles(acceptedFiles);
+      setFiles((prevFiles) => {
+        const updatedFiles = [...prevFiles, ...acceptedFiles];
+        return uniqBy(updatedFiles, 'path');
+      });
 
       // // Execute shell command to convert image to WebP
       // exec(`cwebp "${file.path}" -o "${file.path}.webp"`, (err) => {
@@ -45,6 +51,17 @@ function App(): JSX.Element {
       // });
     }
   };
+
+  const handleClearAll = () => {
+    setFiles([]);
+  };
+
+  const handleRemoveByPath = (path: string) => {
+    setFiles((prevFiles) => {
+      return prevFiles.filter((file) => file.path !== path);
+    });
+  };
+
   return (
     <AppContainer>
       <ConverterTitle>WebP Converter</ConverterTitle>
@@ -57,7 +74,8 @@ function App(): JSX.Element {
             </div>
           )}
         </Dropzone>
-        <FilesListToConvert files={files}></FilesListToConvert>
+        <Controls clearAll={handleClearAll} />
+        <FilesListToConvert files={files} removeByPath={handleRemoveByPath} />
       </ContentWrapper>
     </AppContainer>
   );
