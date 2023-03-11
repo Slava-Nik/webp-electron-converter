@@ -36,12 +36,13 @@ const ConverterTitle = styled.h1`
 
 const Loader = styled(Spin)`
   justify-self: center;
-  margin-top: 20px;
+  margin-top: 80px;
 `;
 
 const shouldOmitNodeModules = true;
 
 function App(): JSX.Element {
+  const [quality, setQuality] = useState<number>(80);
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setLoading] = useState(false);
 
@@ -78,6 +79,10 @@ function App(): JSX.Element {
     });
   };
 
+  const handleQualityUpdate = (qualityLevel: number) => {
+    setQuality(qualityLevel);
+  };
+
   return (
     <AppContainer>
       <ConverterTitle>WebP Converter</ConverterTitle>
@@ -93,7 +98,12 @@ function App(): JSX.Element {
             </div>
           )}
         </Dropzone>
-        <Controls clearAll={handleClearAll} />
+        <Controls
+          filesExist={!!files.length}
+          clearAll={handleClearAll}
+          quality={quality}
+          setQuality={handleQualityUpdate}
+        />
         {isLoading ? (
           <Loader tip="Loading..." size="large" />
         ) : (

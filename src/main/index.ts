@@ -20,8 +20,6 @@ function createWindow(): void {
     }
   });
 
-  initialiseFilesApiMethods();
-
   mainWindow.on('ready-to-show', () => {
     mainWindow.show();
   });
@@ -54,6 +52,7 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window);
   });
 
+  initialiseFilesApiMethods();
   createWindow();
 
   app.on('activate', function () {

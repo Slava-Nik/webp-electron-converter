@@ -13,6 +13,7 @@ const FileList = styled.ul`
 `;
 
 const FilesListRow = styled.li`
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   font-size: 16px;
@@ -61,7 +62,6 @@ const FilesListToConvert = ({ files, removeByPath }: FilesListToConvertProps) =>
   const handleOpenFile = (path: string) => {
     window.filesApi.openFileByPath(path);
   };
-
   return (
     <FilesListContainer>
       {files && (
