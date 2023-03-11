@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import uniqBy from 'lodash.uniqby';
+import { Spin } from 'antd';
 import Dropzone from '../src/components/Dropzone';
 import FilesListToConvert from './components/FilesListToConvert';
 import Controls from './components/Controls';
@@ -16,6 +17,8 @@ const AppContainer = styled.div`
 `;
 
 const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   background-color: #fafafa;
   opacity: 0.95;
@@ -31,8 +34,14 @@ const ConverterTitle = styled.h1`
   letter-spacing: 2px;
 `;
 
+const Loader = styled(Spin)`
+  justify-self: center;
+  margin-top: 20px;
+`;
+
 function App(): JSX.Element {
   const [files, setFiles] = useState<File[]>([]);
+  const [isLoading, setLoading] = useState(false);
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -50,6 +59,7 @@ function App(): JSX.Element {
       // setImageSrc(`${file.path}.webp`);
       // });
     }
+    setLoading(false);
   };
 
   const handleClearAll = () => {
@@ -65,17 +75,24 @@ function App(): JSX.Element {
   return (
     <AppContainer>
       <ConverterTitle>WebP Converter</ConverterTitle>
-
       <ContentWrapper>
-        <Dropzone onDrop={handleDrop}>
+        <Dropzone onDrop={handleDrop} setLoading={setLoading}>
           {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps()}>
+            <div
+              {...getRootProps()}
+              onDragOver={() => setLoading(true)}
+              onDragLeave={() => setLoading(false)}
+            >
               <input {...getInputProps()} />
             </div>
           )}
         </Dropzone>
         <Controls clearAll={handleClearAll} />
-        <FilesListToConvert files={files} removeByPath={handleRemoveByPath} />
+        {isLoading ? (
+          <Loader tip="Loading..." size="large" />
+        ) : (
+          <FilesListToConvert files={files} removeByPath={handleRemoveByPath} />
+        )}
       </ContentWrapper>
     </AppContainer>
   );

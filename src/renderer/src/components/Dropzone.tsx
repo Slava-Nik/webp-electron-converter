@@ -34,7 +34,8 @@ const Container = styled.div`
 `;
 
 interface DropzoneProps {
-  onDrop: (acceptedFiled: any) => void;
+  onDrop: (acceptedFiles: any) => void;
+  setLoading: (loadingState: boolean) => void;
   children?: ({
     getRootProps,
     getInputProps
@@ -44,7 +45,7 @@ interface DropzoneProps {
   }) => React.ReactNode;
 }
 
-const Dropzone = ({ onDrop }: DropzoneProps) => {
+const Dropzone = ({ onDrop, setLoading }: DropzoneProps) => {
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
     accept: { 'image/png': ['.png'], 'image/jpeg': ['.jpeg'] },
     onDrop
@@ -62,7 +63,12 @@ const Dropzone = ({ onDrop }: DropzoneProps) => {
   };
 
   return (
-    <div className="container">
+    <div
+      className="container"
+      onDrop={() => {
+        setLoading(true);
+      }}
+    >
       <Container {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
         <input {...getInputProps()} />
         <p>{getDropzoneTipContent()}</p>
