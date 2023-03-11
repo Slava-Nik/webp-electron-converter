@@ -39,15 +39,21 @@ const Loader = styled(Spin)`
   margin-top: 20px;
 `;
 
+const shouldOmitNodeModules = true;
+
 function App(): JSX.Element {
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setLoading] = useState(false);
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      console.log(acceptedFiles);
       setFiles((prevFiles) => {
-        const updatedFiles = [...prevFiles, ...acceptedFiles];
+        let updatedFiles = [...prevFiles, ...acceptedFiles];
+        if (shouldOmitNodeModules) {
+          updatedFiles = updatedFiles.filter((file) => {
+            return !file.path.includes('/node_modules/');
+          });
+        }
         return uniqBy(updatedFiles, 'path');
       });
 
