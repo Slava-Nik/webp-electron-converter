@@ -2,6 +2,7 @@ const { ipcMain, shell } = require('electron');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const shellQuote = require('shell-quote');
 
 type ConversionResult = {
   inputPath: string;
@@ -19,13 +20,13 @@ export const initialiseFilesApiMethods = () => {
     if (!imagesList) return;
 
     const promises: Promise<ConversionResult>[] = [];
-    const inputPaths = imagesList.map((imagePath) => {
-      return path.join(imagePath);
-    });
-    inputPaths.forEach((inputPath) => {
+
+    imagesList.forEach((inputPath) => {
       const extname = path.extname(inputPath);
       const outputPath = `${inputPath.slice(0, -extname.length)}.webp`;
-      const command = `cwebp -q ${quality} '${inputPath}' -o '${outputPath}'`;
+      const escapedInputPath = shellQuote.quote([inputPath]);
+      const escapedOutputPath = shellQuote.quote([outputPath]);
+      const command = `cwebp -q ${quality} ${escapedInputPath} -o ${escapedOutputPath}`;
 
       const promise = new Promise<ConversionResult>((resolve, reject) => {
         exec(command, (error) => {
