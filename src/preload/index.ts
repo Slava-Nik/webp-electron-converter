@@ -1,7 +1,16 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
+interface Image {
+  path: string;
+}
+
 const filesApi = {
-  openFileByPath: (path: string) => ipcRenderer.invoke('openFileByPath', { path })
+  openFileByPath: (path: string) => ipcRenderer.invoke('openFileByPath', { path }),
+  convertImagesListToWebp: async (imagesList: Image[], quality: number) => {
+    const response = await ipcRenderer.invoke('convertImagesListToWebp', { imagesList, quality });
+
+    return response;
+  }
 };
 
 if (process.contextIsolated) {

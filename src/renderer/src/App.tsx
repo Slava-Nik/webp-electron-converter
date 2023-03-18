@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import uniqBy from 'lodash.uniqby';
 import { Spin } from 'antd';
 import Dropzone from '../src/components/Dropzone';
-import FilesListToConvert from './components/FilesListToConvert';
+import FilesList from './components/FilesList';
 import Controls from './components/Controls';
-import { File } from './types/general';
+import { ConversionResult, File } from './types/general';
 
 const AppContainer = styled.div`
   display: flex;
@@ -44,7 +44,8 @@ const shouldOmitNodeModules = true;
 function App(): JSX.Element {
   const [quality, setQuality] = useState<number>(80);
   const [files, setFiles] = useState<File[]>([]);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [conversionResults, setConversionResults] = useState<ConversionResult[]>([]);
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -57,20 +58,21 @@ function App(): JSX.Element {
         }
         return uniqBy(updatedFiles, 'path');
       });
-
-      // // Execute shell command to convert image to WebP
-      // exec(`cwebp "${file.path}" -o "${file.path}.webp"`, (err) => {
-      //   if (err) throw err;
-      //
-      //   // Set the converted image as the source of an <img> element
-      // setImageSrc(`${file.path}.webp`);
-      // });
     }
     setLoading(false);
   };
 
+  const handleConvert = async () => {
+    const imagesList = files.map((file) => file.path);
+    setLoading(true);
+    const results = await window.filesApi.convertImagesListToWebp(imagesList, quality);
+    setLoading(false);
+    setConversionResults(results);
+  };
+
   const handleClearAll = () => {
     setFiles([]);
+    setConversionResults([]);
   };
 
   const handleRemoveByPath = (path: string) => {
@@ -103,11 +105,16 @@ function App(): JSX.Element {
           clearAll={handleClearAll}
           quality={quality}
           setQuality={handleQualityUpdate}
+          handleConvert={handleConvert}
         />
         {isLoading ? (
           <Loader tip="Loading..." size="large" />
         ) : (
-          <FilesListToConvert files={files} removeByPath={handleRemoveByPath} />
+          <FilesList
+            files={files}
+            conversionResults={conversionResults}
+            removeByPath={handleRemoveByPath}
+          />
         )}
       </ContentWrapper>
     </AppContainer>

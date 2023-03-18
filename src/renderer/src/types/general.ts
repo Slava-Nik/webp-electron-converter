@@ -4,3 +4,8 @@ export interface File {
   size: number;
   type: string;
 }
+export interface ConversionResult {
+  inputPath?: string;
+  newSize?: number;
+  error?: string;
+}

@@ -43,6 +43,7 @@ interface ControlsProps {
   clearAll: () => void;
   quality: number;
   setQuality: (qualityLevel: number) => void;
+  handleConvert: () => void;
 }
 
 const marks: SliderMarks = {
@@ -55,7 +56,7 @@ const marks: SliderMarks = {
   100: '100'
 };
 
-const Controls = ({ filesExist, clearAll, quality, setQuality }: ControlsProps) => {
+const Controls = ({ filesExist, clearAll, quality, setQuality, handleConvert }: ControlsProps) => {
   return (
     <>
       <ControlsContainerTop>
@@ -63,7 +64,7 @@ const Controls = ({ filesExist, clearAll, quality, setQuality }: ControlsProps) 
           <h4>Quality level:</h4>
           <StyledSlider min={1} max={100} onChange={setQuality} value={quality} marks={marks} />
         </div>
-        <Button className="convert-btn" disabled={!filesExist}>
+        <Button className="convert-btn" disabled={!filesExist} onClick={handleConvert}>
           Convert to WebP
         </Button>
       </ControlsContainerTop>
