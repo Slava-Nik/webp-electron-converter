@@ -9,3 +9,8 @@ export interface ConversionResult {
   newSize?: number;
   error?: string;
 }
+
+export enum SystemTheme {
+  DARK = 'dark',
+  LIGHT = 'light'
+}

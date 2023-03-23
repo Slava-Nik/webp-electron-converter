@@ -1,5 +1,10 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
+export enum SystemTheme {
+  DARK = 'dark',
+  LIGHT = 'light'
+}
+
 interface Image {
   path: string;
 }
@@ -13,9 +18,20 @@ const filesApi = {
   }
 };
 
+const themeApi = {
+  getSystemTheme: () => ipcRenderer.invoke('getSystemTheme'),
+  handleSystemThemeUpdate: (callback: (e: any, theme: SystemTheme) => void) =>
+    ipcRenderer.on('system-theme-changed', callback)
+};
+
+const windowApi = {
+  filesApi,
+  themeApi
+};
+
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld('filesApi', filesApi);
+    contextBridge.exposeInMainWorld('api', windowApi);
   } catch (error) {
     console.error(error);
   }

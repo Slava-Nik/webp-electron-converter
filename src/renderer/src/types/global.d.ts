@@ -1,5 +1,5 @@
 export {};
-import { Image } from '../../../preload';
+import { Image, SystemTheme } from '../../../preload';
 
 interface convertImagesResponse {
   inputPath?: string;
@@ -9,9 +9,15 @@ interface convertImagesResponse {
 
 declare global {
   interface Window {
-    filesApi: {
-      openFileByPath: (path: string) => void;
-      convertImagesListToWebp: (imagesList: Image[], quality: number) => convertImagesResponse[];
+    api: {
+      filesApi: {
+        openFileByPath: (path: string) => void;
+        convertImagesListToWebp: (imagesList: Image[], quality: number) => convertImagesResponse[];
+      };
+      themeApi: {
+        getSystemTheme: () => Promise<SystemTheme>;
+        handleSystemThemeUpdate: (callback) => void;
+      };
     };
   }
 }

@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import uniqBy from 'lodash.uniqby';
 import { Spin } from 'antd';
 import Dropzone from '../src/components/Dropzone';
 import FilesList from './components/FilesList';
 import Controls from './components/Controls';
-import { ConversionResult, File } from './types/general';
+import { ConversionResult, File, SystemTheme } from './types/general';
 
 const AppContainer = styled.div`
   display: flex;
@@ -46,8 +46,21 @@ function App(): JSX.Element {
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [conversionResults, setConversionResults] = useState<ConversionResult[]>([]);
+  const [theme, setTheme] = useState<SystemTheme>(SystemTheme.LIGHT);
 
-  const handleDrop = (acceptedFiles) => {
+  useEffect(() => {
+    const initializeSystemTheme = async () => {
+      const theme = await window.api.themeApi.getSystemTheme();
+      setTheme(theme);
+
+      window.api.themeApi.handleSystemThemeUpdate((_event, systemTheme) => {
+        setTheme(systemTheme);
+      });
+    };
+    initializeSystemTheme();
+  }, []);
+
+  const handleDrop = async (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       setFiles((prevFiles) => {
         let updatedFiles = [...prevFiles, ...acceptedFiles];
@@ -65,7 +78,7 @@ function App(): JSX.Element {
   const handleConvert = async () => {
     const imagesList = files.map((file) => file.path);
     setLoading(true);
-    const results = await window.filesApi.convertImagesListToWebp(imagesList, quality);
+    const results = await window.api.filesApi.convertImagesListToWebp(imagesList, quality);
     setLoading(false);
     setConversionResults(results);
   };
@@ -87,6 +100,7 @@ function App(): JSX.Element {
 
   return (
     <AppContainer>
+      <h1>{theme === 'dark' ? 'DARK' : 'LIGHT'}</h1>
       <ConverterTitle>WebP Converter</ConverterTitle>
       <ContentWrapper>
         <Dropzone onDrop={handleDrop} setLoading={setLoading}>
