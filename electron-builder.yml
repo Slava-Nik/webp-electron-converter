@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: myelectronreact
+productName: WebP Converter
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ asarUnpack:
   - resources/*
 afterSign: build/notarize.js
 win:
-  executableName: myelectronreact
+  executableName: WebP Converter
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

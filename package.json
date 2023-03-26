@@ -1,9 +1,10 @@
 {
-  "name": "myelectronreact",
+  "name": "WebP_Converter",
+  "productName": "WebP Converter",
   "version": "1.0.0",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "https://slava-nik.github.io",
   "homepage": "https://www.electronjs.org",
   "scripts": {
     "format": "prettier --write .",
@@ -28,6 +29,7 @@
     "lodash.uniqby": "^4.7.0",
     "react-dropzone": "^14.2.3",
     "sass": "^1.58.3",
+    "shell-quote": "^1.8.0",
     "styled-components": "^5.3.8"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-# myelectronreact
+# WebP Converter
 
 An Electron application with React and TypeScript
 
