@@ -2,16 +2,17 @@ import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 
 const getColor = (props) => {
+  const isDark = props.theme.isDark;
   if (props.isDragAccept) {
-    return '#009260';
+    return isDark ? '#237804' : '#009260';
   }
   if (props.isDragReject) {
-    return '#ff9614';
+    return isDark ? '#ad6800' : '#ff9614';
   }
   if (props.isFocused) {
     return '#2196f3';
   }
-  return '#eeeeee';
+  return isDark ? '#8e8888' : '#eeeeee';
 };
 
 const Container = styled.div`
@@ -25,11 +26,10 @@ const Container = styled.div`
   font-size: 20px;
   border-color: ${(props) => getColor(props)};
   border-style: dashed;
-  background-color: #ffffff;
-  color: #828282;
+  background-color: ${(props) => (props.theme.isDark ? '#484141' : '#ffffff')};
+  color: ${(props) => (props.theme.isDark ? '#d9d3d3' : '#828282')};
   outline: none;
   transition: border 0.24s ease-in-out;
-
   cursor: pointer;
 `;
 
@@ -71,7 +71,7 @@ const Dropzone = ({ onDrop, setLoading }: DropzoneProps) => {
     >
       <Container {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
         <input {...getInputProps()} />
-        <p>{getDropzoneTipContent()}</p>
+        <p style={{ color: 'red!important' }}>{getDropzoneTipContent()}</p>
       </Container>
     </div>
   );

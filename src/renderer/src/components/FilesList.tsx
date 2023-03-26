@@ -9,7 +9,7 @@ const FilesListContainer = styled.div`
 
 const FileList = styled.ul`
   margin: 0;
-  padding-left: 10px;
+  padding-left: 0;
   list-style: none;
 `;
 
@@ -18,12 +18,12 @@ const FilesListRow = styled.li`
   display: flex;
   align-items: center;
   font-size: 16px;
-  padding: 7px 15px 7px 0;
-  background-color: rgb(233, 238, 242);
+  padding: 7px 15px 7px 10px;
+  background-color: ${(props) => (props.theme.isDark ? '#f9fafa' : '#e9eef2')};
   user-select: none;
 
   &:nth-of-type(2n) {
-    background-color: transparent;
+    background-color: ${(props) => (props.theme.isDark ? '#ffedeb' : 'transparent')};
   }
 `;
 
@@ -68,7 +68,7 @@ interface FilesListProps {
 
 const FilesList = ({ files, removeByPath, conversionResults }: FilesListProps) => {
   const handleOpenFile = (path: string) => {
-    window.filesApi.openFileByPath(path);
+    window.api.filesApi.openFileByPath(path);
   };
 
   const filesToDisplay = useMemo(() => {
@@ -86,8 +86,6 @@ const FilesList = ({ files, removeByPath, conversionResults }: FilesListProps) =
     }
     return [];
   }, [files, conversionResults]);
-
-  console.log(filesToDisplay);
 
   const renderSizesBlock = (file) => {
     return (

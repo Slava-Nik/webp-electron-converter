@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import uniqBy from 'lodash.uniqby';
 import { Spin } from 'antd';
 import Dropzone from '../src/components/Dropzone';
 import FilesList from './components/FilesList';
 import Controls from './components/Controls';
-import { ConversionResult, File, SystemTheme } from './types/general';
+import { ConversionResult, File } from './types/general';
 
 const AppContainer = styled.div`
   display: flex;
@@ -20,8 +20,8 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  background-color: #fafafa;
-  opacity: 0.95;
+  background-color: ${(props) =>
+    props.theme.isDark ? 'rgba(18,18,18,0.96)' : 'rgba(250, 250, 250, 0.95)'};
 `;
 
 const ConverterTitle = styled.h1`
@@ -29,7 +29,8 @@ const ConverterTitle = styled.h1`
   margin: 0;
   padding-top: 20px;
   padding-bottom: 20px;
-  color: #333;
+  color: ${(props) => (props.theme.isDark ? '#ede1e1' : '#333')};
+  background-color: ${(props) => (props.theme.isDark ? 'rgba(0,0,0,0.85)' : 'transparent')};
   text-transform: uppercase;
   letter-spacing: 2px;
 `;
@@ -39,28 +40,14 @@ const Loader = styled(Spin)`
   margin-top: 80px;
 `;
 
-const shouldOmitNodeModules = true;
-
 function App(): JSX.Element {
   const [quality, setQuality] = useState<number>(80);
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [conversionResults, setConversionResults] = useState<ConversionResult[]>([]);
-  const [theme, setTheme] = useState<SystemTheme>(SystemTheme.LIGHT);
-
-  useEffect(() => {
-    const initializeSystemTheme = async () => {
-      const theme = await window.api.themeApi.getSystemTheme();
-      setTheme(theme);
-
-      window.api.themeApi.handleSystemThemeUpdate((_event, systemTheme) => {
-        setTheme(systemTheme);
-      });
-    };
-    initializeSystemTheme();
-  }, []);
 
   const handleDrop = async (acceptedFiles) => {
+    const shouldOmitNodeModules = true;
     if (acceptedFiles.length > 0) {
       setFiles((prevFiles) => {
         let updatedFiles = [...prevFiles, ...acceptedFiles];
@@ -100,7 +87,6 @@ function App(): JSX.Element {
 
   return (
     <AppContainer>
-      <h1>{theme === 'dark' ? 'DARK' : 'LIGHT'}</h1>
       <ConverterTitle>WebP Converter</ConverterTitle>
       <ContentWrapper>
         <Dropzone onDrop={handleDrop} setLoading={setLoading}>

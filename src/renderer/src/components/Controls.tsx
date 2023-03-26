@@ -17,6 +17,7 @@ const ControlsContainerTop = styled.div`
       margin-bottom: 5px;
       padding-left: 5px;
       font-size: 16px;
+      color: ${(props) => (props.theme.isDark ? '#d9d3d3' : '#000')};
     }
   }
 
