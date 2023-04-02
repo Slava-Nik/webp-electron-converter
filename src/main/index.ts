@@ -1,4 +1,5 @@
-import { app, shell, BrowserWindow, nativeTheme } from 'electron';
+require('dotenv').config();
+import { app, shell, BrowserWindow } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';

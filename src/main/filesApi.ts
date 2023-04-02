@@ -11,6 +11,8 @@ type ConversionResult = {
   reason?: string;
 };
 
+const cwebpPath = process.env.CWEBP_PATH || '/opt/homebrew/bin/cwebp';
+
 export const initialiseFilesApiMethods = () => {
   ipcMain.handle('openFileByPath', (_event, { path }) => {
     if (path) shell.showItemInFolder(path);
@@ -26,7 +28,7 @@ export const initialiseFilesApiMethods = () => {
       const outputPath = `${inputPath.slice(0, -extname.length)}.webp`;
       const escapedInputPath = shellQuote.quote([inputPath]);
       const escapedOutputPath = shellQuote.quote([outputPath]);
-      const command = `cwebp -q ${quality} ${escapedInputPath} -o ${escapedOutputPath}`;
+      const command = `${cwebpPath} -q ${quality} ${escapedInputPath} -o ${escapedOutputPath}`;
 
       const promise = new Promise<ConversionResult>((resolve, reject) => {
         exec(command, (error) => {
